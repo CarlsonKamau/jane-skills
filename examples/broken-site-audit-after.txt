@@ -1,0 +1,34 @@
+== ship-ready-web audit ==
+[1] Env files
+  PASS  no .env files tracked
+  PASS  .env ignored
+  PASS  .env.example present
+[2] Secret patterns in source
+  PASS  no high-confidence secret patterns
+  PASS  no hardcoded JWTs
+  SKIP  gitleaks not installed (brew install gitleaks)
+[3] Client-exposed env vars
+  PASS  no suspicious public env names
+[4] Dependencies
+  PASS  lockfile present
+  PASS  npm audit: no high/critical
+[5] Next.js config
+  PASS  headers() defined
+  PASS  HSTS set
+  PASS  CSP present
+  PASS  X-Powered-By disabled
+  PASS  proxy/middleware present
+  PASS  server-side session checks found in app code
+  PASS  robots
+  PASS  sitemap
+  PASS  custom 404
+[6] Risky code patterns
+  WARN  dangerouslySetInnerHTML used in: ./app/JsonLd.tsx  (verify input is trusted)
+  PASS  no tokens in localStorage
+[7] Public assets
+  PASS  OG image
+  PASS  favicon
+
+Manual checks still required: Lighthouse mobile, axe, securityheaders.com, real-device test.
+See CHECKLIST.md.
+RESULT: no critical failures

@@ -1,0 +1,37 @@
+---
+title: ship-ready-web
+description: A Claude Code skill and checklist that turns "it looks done" into "it is done" for AI-built websites.
+template: splash
+hero:
+  tagline: Fast, secure, accessible, compliant, and not obviously AI-generated. Audited before handoff, every time.
+  actions:
+    - text: Beginner quickstart
+      link: /02-quickstart-beginner/
+      icon: right-arrow
+    - text: Step by step
+      link: /03-step-by-step/
+      variant: minimal
+    - text: GitHub
+      link: https://github.com/CarlsonKamau/jane-skills
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+![Workflow](/workflow.svg)
+
+<CardGrid stagger>
+  <Card title="One command" icon="rocket">
+    `bash scripts/audit.sh` finds committed secrets, public service keys, missing headers, and risky patterns. Prints locations, never values.
+  </Card>
+  <Card title="Seventy checks" icon="list-format">
+    Ten sections from secrets to final QA. Critical items block launch; the rest are prioritised.
+  </Card>
+  <Card title="Asks before it acts" icon="warning">
+    Payments, personal data, vendors, and legal copy always stop for a human. Kenya DPA, GDPR, PCI, and HIPAA scoping built in.
+  </Card>
+  <Card title="Under 400 words" icon="document">
+    The skill itself is tiny. Detail loads only when the workflow calls for it, so it costs almost nothing per conversation.
+  </Card>
+</CardGrid>

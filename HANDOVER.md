@@ -1,0 +1,78 @@
+# HANDOVER: ship-ready-web
+
+Read this first. It is the full context for continuing the project in Claude Code. Written 18 September 2026 after a chat session that built everything in this repo without network access, so some things are built but untested (see "Not yet verified").
+
+## What this project is
+
+A Claude Code skill plus checklist, adapter, audit script, docs, case study, and docs website that audits and hardens AI-built websites before handoff. Owner: Carl, The Causality Agency, Nairobi. Private repo for now, opening later. Stack for v1: framework-agnostic core with a Next.js 16 adapter. Docs site hosts on Vercel.
+
+## Working rules (do not skip)
+
+1. Never use em dashes anywhere: code comments, docs, commit messages, replies.
+2. When auditing anything, take your time. Verify claims against sources, test rather than assume, and report what was checked and what was not.
+3. Ask before touching payments, personal data flows, third-party vendors, or legal text. Never assume.
+4. Never print, log, or commit a secret. The audit script prints `file:line`, never values. Keep it that way.
+5. `skills/ship-ready-web/SKILL.md` stays under 400 words. Detail goes in CHECKLIST.md, references/, adapters/, docs/.
+6. Surgical diffs. Do not rewrite files wholesale.
+7. Success criteria over instructions, in the skill and in your own work.
+
+## Repo map
+
+```
+skills/ship-ready-web/      the skill (SKILL.md, CHECKLIST.md, references/compliance.md, adapters/nextjs/, scripts/audit.sh)
+docs/                       10 markdown pages + assets/workflow.svg; source of truth for the website
+examples/broken-site/       demo Next.js site with 14 planted problems (fake credentials, intentional)
+examples/fixed-site/        same site after the workflow
+examples/*-audit-*.txt      real audit.sh output before and after
+site/                       Astro Starlight docs site; sync-docs copies ../docs into it; deploys to Vercel with root dir = site
+.github/workflows/audit.yml regression CI: gitleaks, fixed-site must pass, broken-site must fail
+.gitleaks.toml              allowlists the demo folder only
+CLAUDE.md                   repo conventions for agents
+SECURITY.md, LICENSE (MIT)
+```
+
+## What is done
+
+- Skill drafted and packaged; SKILL.md at 392 words.
+- Checklist: 10 sections, ~70 items, critical items tagged [C].
+- Compliance reference verified against primary sources in September 2026 (ODPC thresholds, PCI SAQ A r1 and FAQ 1588, Next.js 16 proxy rename and CVE-2025-29927).
+- Next.js adapter: next.config.mjs headers (CSP report-only), proxy.ts, lib/auth-guard.ts, .env.example, app/layout-metadata.ts, robots.ts, sitemap.ts, JsonLd.tsx.
+- audit.sh tested against broken-site (exit 1, 6 FAIL) and fixed-site (exit 0 except the placeholder lockfile FAIL, which is expected).
+- Docs written for beginners through experts.
+- Docs site scaffolded (Starlight ^0.40, Astro ^6.4.5, explicit sidebar items to avoid the 0.39 autogenerate breaking change).
+
+## Not yet verified (do these first)
+
+1. `cd site && npm install && npm run sync-docs && npm run build`. Never run in this repo yet. If install fails on versions, run `npm create astro@latest -- --template starlight` in /tmp, copy its package.json versions into site/package.json, keep everything else. Check `index.mdx` renders (Card/CardGrid imports, splash template) and that `/workflow.svg` loads.
+2. `cd examples/fixed-site && npm install` to replace the placeholder package-lock.json, then re-run the audit. Expect zero FAIL. Update examples/broken-site-audit-after.txt and docs/08-case-study.md if the output changes. Note: broken-site has no lockfile on purpose; do not add one.
+3. Actually type-check the adapter in a real Next.js 16 project: `npx create-next-app@latest /tmp/probe --ts --app`, copy the adapter in, `npm run build`. proxy.ts and lib/auth-guard.ts were written from docs, not compiled.
+4. Push to GitHub (private) and confirm the CI workflow goes green. The broken-site negative test and the gitleaks allowlist have not run in real Actions.
+5. Deploy site/ to Vercel: root directory `site`, keep "include files outside root" on. Check securityheaders.com on the deployed docs site; vercel.json sets headers but they are untested.
+6. Replace `YOUR-ORG` in: README.md, site/astro.config.mjs (two places), docs/02-quickstart-beginner.md.
+
+## Known limitations (documented, not bugs)
+
+- audit.sh is heuristic; does not run Lighthouse or axe; assumes App Router.
+- CSP ships with 'unsafe-inline' for scripts; nonce-based CSP is a roadmap item.
+- No consent manager, no rate limiter in the adapter (deliberate; see docs/06).
+- AUDIT.md is gitignored by default.
+
+## Roadmap, in priority order
+
+1. Verification list above.
+2. Run the skill against one real client site and note which checks are noisy for Carl's actual stack (Next.js + Supabase + Vercel, some static landing pages, self-hosted Nginx/Cloudflare for a few).
+3. Eval set: three starter prompts are in docs/07-expert-notes.md. Save as skills/ship-ready-web/evals/evals.json and run the skill-creator trigger evals.
+4. Static/Nginx/Cloudflare adapter (`_headers`, nginx.conf) for self-hosted and static-export sites.
+5. Lighthouse CI config with mobile budgets.
+6. Consent manager reference implementation.
+7. Nonce-based CSP variant in the adapter.
+8. Open the repo publicly once 1 to 3 are done.
+
+## Suggested first prompt for Claude Code
+
+> Read HANDOVER.md and CLAUDE.md. Then work through the "Not yet verified" list in order, one item at a time, reporting what you checked and what the result was before moving on. Stop and ask me before changing anything in references/compliance.md or any legal wording.
+
+## Session log summary
+
+- Chat produced: initial skill, corrections after research audit (proxy.ts, PCI tiers, ODPC thresholds), audit.sh false-pass fix for empty lockfiles, docs, case study, site scaffold, CI regression tests.
+- Files were created in a sandbox with no network; nothing has been installed or built.

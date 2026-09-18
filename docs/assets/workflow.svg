@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#475569"/>
+    </marker>
+    <style>
+      .box{fill:#ffffff;stroke:#0f172a;stroke-width:1.5;rx:10}
+      .t{fill:#0f172a;font-size:14px;font-weight:600}
+      .s{fill:#475569;font-size:11.5px}
+      .arrow{stroke:#475569;stroke-width:1.5;fill:none;marker-end:url(#a)}
+      .crit{fill:#fee2e2;stroke:#b91c1c}
+      .ok{fill:#dcfce7;stroke:#15803d}
+      .ask{fill:#fef3c7;stroke:#b45309}
+      .lbl{fill:#64748b;font-size:11px}
+      @media (prefers-color-scheme: dark){
+        .box{fill:#0f172a;stroke:#e2e8f0}.t{fill:#f1f5f9}.s{fill:#94a3b8}.lbl{fill:#94a3b8}
+        .crit{fill:#450a0a;stroke:#f87171}.ok{fill:#052e16;stroke:#4ade80}.ask{fill:#451a03;stroke:#fbbf24}
+        .arrow{stroke:#94a3b8}#a path{fill:#94a3b8}
+      }
+    </style>
+  </defs>
+
+  <text x="480" y="30" text-anchor="middle" class="t" font-size="18">ship-ready-web: from "it looks done" to "it is done"</text>
+
+  <!-- Row 1 -->
+  <rect x="30" y="70" width="170" height="70" class="box"/>
+  <text x="115" y="98" text-anchor="middle" class="t">1. Detect stack</text>
+  <text x="115" y="118" text-anchor="middle" class="s">package.json, config files</text>
+  <text x="115" y="132" text-anchor="middle" class="s">load matching adapter</text>
+
+  <rect x="240" y="70" width="170" height="70" class="box"/>
+  <text x="325" y="98" text-anchor="middle" class="t">2. Run audit.sh</text>
+  <text x="325" y="118" text-anchor="middle" class="s">secrets, env, headers, deps</text>
+  <text x="325" y="132" text-anchor="middle" class="s">prints file:line, never values</text>
+
+  <rect x="450" y="70" width="170" height="70" class="box"/>
+  <text x="535" y="98" text-anchor="middle" class="t">3. Walk CHECKLIST</text>
+  <text x="535" y="118" text-anchor="middle" class="s">10 sections, 70 items</text>
+  <text x="535" y="132" text-anchor="middle" class="s">PASS / FAIL / N/A each</text>
+
+  <rect x="660" y="70" width="270" height="70" class="box ask"/>
+  <text x="795" y="98" text-anchor="middle" class="t">Payments, personal data, legal?</text>
+  <text x="795" y="118" text-anchor="middle" class="s">read compliance.md, then ASK the</text>
+  <text x="795" y="132" text-anchor="middle" class="s">human before changing anything</text>
+
+  <path d="M200 105H240" class="arrow"/>
+  <path d="M410 105H450" class="arrow"/>
+  <path d="M620 105H660" class="arrow"/>
+
+  <!-- Row 2 -->
+  <rect x="660" y="190" width="270" height="70" class="box crit"/>
+  <text x="795" y="218" text-anchor="middle" class="t">4. Fix in priority order</text>
+  <text x="795" y="238" text-anchor="middle" class="s">secrets and auth, headers, data,</text>
+  <text x="795" y="252" text-anchor="middle" class="s">performance, a11y, SEO, design, ops</text>
+
+  <rect x="450" y="190" width="170" height="70" class="box"/>
+  <text x="535" y="218" text-anchor="middle" class="t">5. Re-run audit.sh</text>
+  <text x="535" y="238" text-anchor="middle" class="s">zero critical findings</text>
+  <text x="535" y="252" text-anchor="middle" class="s">or loop back to step 4</text>
+
+  <rect x="240" y="190" width="170" height="70" class="box ok"/>
+  <text x="325" y="218" text-anchor="middle" class="t">6. Write AUDIT.md</text>
+  <text x="325" y="238" text-anchor="middle" class="s">critical / high / low / passed</text>
+  <text x="325" y="252" text-anchor="middle" class="s">plus questions for the client</text>
+
+  <rect x="30" y="190" width="170" height="70" class="box ok"/>
+  <text x="115" y="218" text-anchor="middle" class="t">7. Manual checks</text>
+  <text x="115" y="238" text-anchor="middle" class="s">Lighthouse mobile, axe,</text>
+  <text x="115" y="252" text-anchor="middle" class="s">securityheaders.com, real phone</text>
+
+  <path d="M795 140V190" class="arrow"/>
+  <path d="M660 225H620" class="arrow"/>
+  <path d="M450 225H410" class="arrow"/>
+  <path d="M240 225H200" class="arrow"/>
+  <path d="M500 190C500 165 760 165 760 190" class="arrow" stroke-dasharray="4 4"/>
+  <text x="630" y="172" text-anchor="middle" class="lbl">still failing? loop</text>
+
+  <!-- Legend / principles -->
+  <text x="30" y="310" class="t">Principles</text>
+  <text x="30" y="332" class="s">Success criteria, not instructions: the agent is told what "done" looks like and verifies it.</text>
+  <text x="30" y="350" class="s">Progressive loading: SKILL.md is under 400 words; checklist, compliance notes and adapters load only when needed.</text>
+  <text x="30" y="368" class="s">Surgical changes only. Never print a secret. Ask before touching money, personal data, vendors or legal copy.</text>
+  <text x="30" y="386" class="s">Defence in depth: a middleware redirect is a convenience; the session check lives where the data is read.</text>
+</svg>

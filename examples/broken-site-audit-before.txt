@@ -1,0 +1,38 @@
+== ship-ready-web audit ==
+[1] Env files
+  FAIL  an .env file is tracked by git
+  WARN  .gitignore does not ignore .env*
+  WARN  no .env.example
+[2] Secret patterns in source
+  PASS  no high-confidence secret patterns
+  WARN  hardcoded JWT-shaped strings (anon keys belong in env, service keys never in client code):
+        ./.env:2
+        ./.env:3
+        ./lib-supabase.ts:5
+  SKIP  gitleaks not installed (brew install gitleaks)
+[3] Client-exposed env vars
+  FAIL  public env vars with secret-like names:
+        NEXT_PUBLIC_SUPABASE_SERVICE_KEY
+[4] Dependencies
+  FAIL  no lockfile
+  SKIP  npm audit (needs npm + package-lock.json)
+[5] Next.js config
+  FAIL  no headers() in next.config.mjs
+  FAIL  HSTS missing
+  WARN  no CSP
+  WARN  poweredByHeader not disabled
+  WARN  no proxy.ts or middleware.ts
+  WARN  no server-side session check found in app/ (protected data must be guarded where it is read)
+  WARN  no app/robots.ts
+  WARN  no app/sitemap.ts
+  WARN  no app/not-found.tsx
+[6] Risky code patterns
+  WARN  dangerouslySetInnerHTML used in: ./app/page.tsx  (verify input is trusted)
+  FAIL  token stored in localStorage
+[7] Public assets
+  WARN  no public/og.jpg
+  WARN  no favicon
+
+Manual checks still required: Lighthouse mobile, axe, securityheaders.com, real-device test.
+See CHECKLIST.md.
+RESULT: critical failures found

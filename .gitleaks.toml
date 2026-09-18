@@ -1,0 +1,7 @@
+# gitleaks config: the broken demo site contains fake credential-shaped
+# strings on purpose so the audit has something to find. Nothing real.
+[extend]
+useDefault = true
+
+[allowlist]
+paths = ['''examples/broken-site/''', '''examples/broken-site-audit-before\.txt''', '''docs/08-case-study\.md''', '''site/src/content/docs/08-case-study\.md''']

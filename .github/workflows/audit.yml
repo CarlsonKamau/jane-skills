@@ -1,0 +1,28 @@
+# Regression tests for the skill itself:
+#   1. gitleaks: the repo must never contain a real secret
+#   2. the fixed demo site must pass the audit (exit 0)
+#   3. the broken demo site must FAIL the audit (exit 1); if it passes, a check regressed
+# Copy only the "Static audit" step and scripts/audit.sh into client repos.
+name: ship-ready audit
+on: [push, pull_request]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+      - name: Fixed site must pass
+        working-directory: examples/fixed-site
+        run: bash ../../skills/ship-ready-web/scripts/audit.sh
+      - name: Broken site must fail
+        working-directory: examples/broken-site
+        run: |
+          if bash ../../skills/ship-ready-web/scripts/audit.sh; then
+            echo "broken-site passed the audit; a check has regressed"; exit 1; fi
+          echo "broken-site correctly fails"

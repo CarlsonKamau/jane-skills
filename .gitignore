@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+# The broken demo site's .env is intentional and contains fake values only.
+!examples/broken-site/.env
+.DS_Store
+*.log
+AUDIT.md
