@@ -108,4 +108,4 @@ Copy `.github/workflows/audit.yml` and the `scripts/audit.sh` file into the clie
 
 `references/compliance.md` is scoping guidance. Get a lawyer for anything involving regulated data.
 
-MIT. Built by The Causality Agency, Nairobi.
+MIT. Built by Carlson Kamau.

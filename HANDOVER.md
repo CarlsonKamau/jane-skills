@@ -4,7 +4,7 @@ Read this first. It is the full context for continuing the project in Claude Cod
 
 ## What this project is
 
-A Claude Code skill plus checklist, adapter, audit script, docs, case study, and docs website that audits and hardens AI-built websites before handoff. Owner: Carl, The Causality Agency, Nairobi. Private repo for now, opening later. Stack for v1: framework-agnostic core with a Next.js 16 adapter. Docs site hosts on Vercel.
+A Claude Code skill plus checklist, adapter, audit script, docs, case study, and docs website that audits and hardens AI-built websites before handoff. Owner: Carlson Kamau, personal project. Private repo for now, opening later. Stack for v1: framework-agnostic core with a Next.js 16 adapter. Docs site hosts on Vercel.
 
 ## Working rules (do not skip)
 
@@ -51,7 +51,7 @@ Done and confirmed:
 4. Pushed to https://github.com/CarlsonKamau/jane-skills (private). CI green: gitleaks action clean, fixed-site passes, broken-site fails. Found and fixed two audit.sh bugs on the way: gitleaks was called with a non-existent `-q` flag, and a run from a subfolder scanned the whole repo history.
 6. `YOUR-ORG` replaced everywhere (also in `site/src/content/docs/index.mdx`, which the old list missed).
 
-5. Deployed: https://jane-skills.vercel.app (Vercel project `jane-skills`, team thecausality, connected to the GitHub repo, root directory `site`, framework Astro, "include files outside root" on). All six security headers from `vercel.json` confirmed live; CSP includes `'wasm-unsafe-eval'` for Pagefind search. Still to do by hand: securityheaders.com score, and try the search box in a browser.
+5. Deployed: https://jane-skills.vercel.app (Vercel project `jane-skills`, connected to the GitHub repo, root directory `site`, framework Astro, "include files outside root" on). All six security headers from `vercel.json` confirmed live; CSP includes `'wasm-unsafe-eval'` for Pagefind search. Still to do by hand: securityheaders.com score, and try the search box in a browser.
 
 ## Known limitations (documented, not bugs)
 
@@ -63,7 +63,7 @@ Done and confirmed:
 ## Roadmap, in priority order
 
 1. Verification list above.
-2. Run the skill against one real client site and note which checks are noisy for Carl's actual stack (Next.js + Supabase + Vercel, some static landing pages, self-hosted Nginx/Cloudflare for a few).
+2. Run the skill against one real client site and note which checks are noisy for Carlson's actual stack (Next.js + Supabase + Vercel, some static landing pages, self-hosted Nginx/Cloudflare for a few).
 3. Eval set: three starter prompts are in docs/07-expert-notes.md. Save as skills/ship-ready-web/evals/evals.json and run the skill-creator trigger evals.
 4. Static/Nginx/Cloudflare adapter (`_headers`, nginx.conf) for self-hosted and static-export sites.
 5. Lighthouse CI config with mobile budgets.
