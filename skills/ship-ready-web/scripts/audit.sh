@@ -38,7 +38,14 @@ fi
 JWTS=$(grep -rEIn $EXCL 'eyJhbGciOi[A-Za-z0-9_-]{20,}' . 2>/dev/null | cut -d: -f1,2)
 [ -n "$JWTS" ] && { warn "hardcoded JWT-shaped strings (anon keys belong in env, service keys never in client code):"; echo "$JWTS" | sed 's/^/        /'; } || pass "no hardcoded JWTs"
 if command -v gitleaks >/dev/null 2>&1; then
-  gitleaks detect --no-banner --redact -q >/dev/null 2>&1 && pass "gitleaks clean" || fail "gitleaks found leaks (run: gitleaks detect --redact)"
+  TOP=$(git rev-parse --show-toplevel 2>/dev/null || true)
+  GL=""; [ -n "$TOP" ] && [ -f "$TOP/.gitleaks.toml" ] && GL="-c $TOP/.gitleaks.toml"
+  if [ -n "$TOP" ] && [ "$TOP" != "$(pwd -P)" ]; then
+    # Subfolder of a larger repo: scan this folder's files, not the whole repo history.
+    gitleaks detect --no-git --source . $GL --no-banner --redact -q >/dev/null 2>&1 && pass "gitleaks clean (working tree only; run from the git root to scan history)" || fail "gitleaks found leaks (run: gitleaks detect --no-git --redact)"
+  else
+    gitleaks detect $GL --no-banner --redact -q >/dev/null 2>&1 && pass "gitleaks clean" || fail "gitleaks found leaks (run: gitleaks detect --redact)"
+  fi
 else
   skip "gitleaks not installed (brew install gitleaks)"
 fi
