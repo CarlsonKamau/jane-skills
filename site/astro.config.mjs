@@ -3,7 +3,7 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: "https://ship-ready-web.vercel.app", // change to your domain
+  site: "https://jane-skills.vercel.app",
   integrations: [
     starlight({
       title: "ship-ready-web",

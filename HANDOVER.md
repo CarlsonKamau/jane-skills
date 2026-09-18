@@ -51,9 +51,7 @@ Done and confirmed:
 4. Pushed to https://github.com/CarlsonKamau/jane-skills (private). CI green: gitleaks action clean, fixed-site passes, broken-site fails. Found and fixed two audit.sh bugs on the way: gitleaks was called with a non-existent `-q` flag, and a run from a subfolder scanned the whole repo history.
 6. `YOUR-ORG` replaced everywhere (also in `site/src/content/docs/index.mdx`, which the old list missed).
 
-Still open:
-
-5. Deploy site/ to Vercel: project not yet created. Settings needed: root directory `site`, framework Astro, "include files outside root" on (sync-docs reads `../docs`). `vercel.json` CSP now includes `'wasm-unsafe-eval'` because Pagefind search runs WebAssembly; the headers are still untested on a live deployment. After deploy: check securityheaders.com and that search works.
+5. Deployed: https://jane-skills.vercel.app (Vercel project `jane-skills`, team thecausality, connected to the GitHub repo, root directory `site`, framework Astro, "include files outside root" on). All six security headers from `vercel.json` confirmed live; CSP includes `'wasm-unsafe-eval'` for Pagefind search. Still to do by hand: securityheaders.com score, and try the search box in a browser.
 
 ## Known limitations (documented, not bugs)
 
