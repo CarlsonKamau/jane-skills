@@ -40,12 +40,18 @@ JWTS=$(grep -rEIn $EXCL 'eyJhbGciOi[A-Za-z0-9_-]{20,}' . 2>/dev/null | cut -d: -
 if command -v gitleaks >/dev/null 2>&1; then
   TOP=$(git rev-parse --show-toplevel 2>/dev/null || true)
   GL=""; [ -n "$TOP" ] && [ -f "$TOP/.gitleaks.toml" ] && GL="-c $TOP/.gitleaks.toml"
-  if [ -n "$TOP" ] && [ "$TOP" != "$(pwd -P)" ]; then
+  # Exit code 2 means leaks; 1 means gitleaks itself failed (bad flag, bad config).
+  if [ -n "$TOP" ] && [ -n "$(git rev-parse --show-prefix 2>/dev/null)" ]; then
     # Subfolder of a larger repo: scan this folder's files, not the whole repo history.
-    gitleaks detect --no-git --source . $GL --no-banner --redact -q >/dev/null 2>&1 && pass "gitleaks clean (working tree only; run from the git root to scan history)" || fail "gitleaks found leaks (run: gitleaks detect --no-git --redact)"
+    gitleaks detect --no-git --source . $GL --no-banner --redact --exit-code 2 >/dev/null 2>&1; RC=$?; NOTE=" (working tree only; run from the git root to scan history)"; HINT="--no-git "
   else
-    gitleaks detect $GL --no-banner --redact -q >/dev/null 2>&1 && pass "gitleaks clean" || fail "gitleaks found leaks (run: gitleaks detect --redact)"
+    gitleaks detect $GL --no-banner --redact --exit-code 2 >/dev/null 2>&1; RC=$?; NOTE=""; HINT=""
   fi
+  case "$RC" in
+    0) pass "gitleaks clean$NOTE" ;;
+    2) fail "gitleaks found leaks (run: gitleaks detect ${HINT}--redact)" ;;
+    *) warn "gitleaks could not run (run: gitleaks detect ${HINT}--redact to see why)" ;;
+  esac
 else
   skip "gitleaks not installed (brew install gitleaks)"
 fi
