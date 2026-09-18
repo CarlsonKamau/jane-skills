@@ -37,18 +37,23 @@ SECURITY.md, LICENSE (MIT)
 - Checklist: 10 sections, ~70 items, critical items tagged [C].
 - Compliance reference verified against primary sources in September 2026 (ODPC thresholds, PCI SAQ A r1 and FAQ 1588, Next.js 16 proxy rename and CVE-2025-29927).
 - Next.js adapter: next.config.mjs headers (CSP report-only), proxy.ts, lib/auth-guard.ts, .env.example, app/layout-metadata.ts, robots.ts, sitemap.ts, JsonLd.tsx.
-- audit.sh tested against broken-site (exit 1, 6 FAIL) and fixed-site (exit 0 except the placeholder lockfile FAIL, which is expected).
+- audit.sh tested against broken-site (exit 1, 6 FAIL) and fixed-site (exit 0, zero FAIL).
 - Docs written for beginners through experts.
 - Docs site scaffolded (Starlight ^0.40, Astro ^6.4.5, explicit sidebar items to avoid the 0.39 autogenerate breaking change).
 
-## Not yet verified (do these first)
+## Verification status (updated 18 September 2026)
 
-1. `cd site && npm install && npm run sync-docs && npm run build`. Never run in this repo yet. If install fails on versions, run `npm create astro@latest -- --template starlight` in /tmp, copy its package.json versions into site/package.json, keep everything else. Check `index.mdx` renders (Card/CardGrid imports, splash template) and that `/workflow.svg` loads.
-2. `cd examples/fixed-site && npm install` to replace the placeholder package-lock.json, then re-run the audit. Expect zero FAIL. Update examples/broken-site-audit-after.txt and docs/08-case-study.md if the output changes. Note: broken-site has no lockfile on purpose; do not add one.
-3. Actually type-check the adapter in a real Next.js 16 project: `npx create-next-app@latest /tmp/probe --ts --app`, copy the adapter in, `npm run build`. proxy.ts and lib/auth-guard.ts were written from docs, not compiled.
-4. Push to GitHub (private) and confirm the CI workflow goes green. The broken-site negative test and the gitleaks allowlist have not run in real Actions.
-5. Deploy site/ to Vercel: root directory `site`, keep "include files outside root" on. Check securityheaders.com on the deployed docs site; vercel.json sets headers but they are untested.
-6. Replace `YOUR-ORG` in: README.md, site/astro.config.mjs (two places), docs/02-quickstart-beginner.md.
+Done and confirmed:
+
+1. Site: `npm install`, `sync-docs`, `build` all pass (astro 6.4.8, starlight 0.40.0). sync-docs needed a `fileURLToPath` fix to run on Windows. Edit links were removed because the synced pages are gitignored. `npm audit` on the site reports advisories in astro 6.x that need astro 7 and a newer starlight; not bumped yet.
+2. fixed-site: real lockfile committed; `next` and `@supabase/supabase-js` bumped to patched releases; audit exits 0 with zero FAIL. CI step updated to match.
+3. Adapter type-checks and builds in a fresh Next.js 16.3.5 app (`tsc --noEmit` clean, `next build` clean, proxy.ts recognised).
+4. Pushed to https://github.com/CarlsonKamau/jane-skills (private). CI green: gitleaks action clean, fixed-site passes, broken-site fails. Found and fixed two audit.sh bugs on the way: gitleaks was called with a non-existent `-q` flag, and a run from a subfolder scanned the whole repo history.
+6. `YOUR-ORG` replaced everywhere (also in `site/src/content/docs/index.mdx`, which the old list missed).
+
+Still open:
+
+5. Deploy site/ to Vercel: project not yet created. Settings needed: root directory `site`, framework Astro, "include files outside root" on (sync-docs reads `../docs`). `vercel.json` CSP now includes `'wasm-unsafe-eval'` because Pagefind search runs WebAssembly; the headers are still untested on a live deployment. After deploy: check securityheaders.com and that search works.
 
 ## Known limitations (documented, not bugs)
 
